@@ -1,0 +1,31 @@
+name: Schematron compile
+description: ...
+author: Erlend Klakegg Bergheim
+
+inputs:
+  files:
+    description: File targets and sources
+    required: true
+  params:
+    description: Parameters
+    required: false
+  include:
+    description: Perfom include
+    required: false
+    default: 'true'
+  expand:
+    description: Perfom expand
+    required: false
+    default: 'true'
+  compile:
+    description: Perfom compile
+    required: false
+    default: 'true'
+
+branding:
+  color: green
+  icon: filter
+
+runs:
+  using: node12
+  main: index.js
