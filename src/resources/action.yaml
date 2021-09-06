@@ -21,6 +21,10 @@ inputs:
     description: Perfom compile
     required: false
     default: 'true'
+  pipeline:
+    description: Pipeline to use
+    required: false
+    default: 'schxslt'
 
 branding:
   color: green

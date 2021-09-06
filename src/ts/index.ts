@@ -13,9 +13,10 @@ function run() {
     var include = (core.getInput('include') || 'true').toLowerCase() == 'true'
     var expand = (core.getInput('expand') || 'true').toLowerCase() == 'true'
     var compile = (core.getInput('compile') || 'true').toLowerCase() == 'true'
+    var pipeline = core.getInput('pipeline') || 'schxslt'
 
     // Prepare steps
-    var steps = getSteps('schxslt', include, expand, compile)
+    var steps = getSteps(pipeline, include, expand, compile)
 
     // Loop through files
     Object.entries(files).forEach(([target, source]) => {
