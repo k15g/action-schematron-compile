@@ -7,11 +7,18 @@ var pipelines = {
         include: __dirname + "/node_modules/@k15g/xslt-schxslt-saxonjs-2.3/include.sef.json",
         expand: __dirname + "/node_modules/@k15g/xslt-schxslt-saxonjs-2.3/expand.sef.json",
         compile: __dirname + "/node_modules/@k15g/xslt-schxslt-saxonjs-2.3/compile-for-svrl.sef.json",
-    }
+    },
+    "iso-schematron": {
+        include: __dirname + "/node_modules/@k15g/xslt-schematron-saxonjs-2.3/iso_dsdl_include.sef.json",
+        expand: __dirname + "/node_modules/@k15g/xslt-schematron-saxonjs-2.3/iso_abstract_expand.sef.json",
+        compile: __dirname + "/node_modules/@k15g/xslt-schematron-saxonjs-2.3/iso_svrl_for_xslt2.sef.json",
+    },
 };
 function getSteps(type, include, expand, compile) {
     var steps = [];
     var pipeline = pipelines[type];
+    if (pipeline == undefined)
+        throw new Error("Pipeline '" + type + "' is unknown.");
     if (include && expand && compile && pipeline.all) {
         steps.push(pipeline.all);
     }
