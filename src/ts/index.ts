@@ -3,6 +3,7 @@ import * as yaml from 'js-yaml'
 import * as fs from 'fs'
 import * as path from 'path'
 import { TransformOptions, TransformResponse } from './saxon'
+import { getSteps } from './pipelines'
 const SaxonJS = require('saxon-js/SaxonJS2N')
 
 function run() {
@@ -14,18 +15,7 @@ function run() {
     var compile = (core.getInput('compile') || 'true').toLowerCase() == 'true'
 
     // Prepare steps
-    var steps: string[] = []
-
-    if (include && expand && compile) {
-        steps.push(`${__dirname}/node_modules/@k15g/xslt-schxslt-saxonjs-2.3/pipeline-for-svrl.sef.json`)
-    } else {
-        if (include)
-            steps.push(`${__dirname}/node_modules/@k15g/xslt-schxslt-saxonjs-2.3/include.sef.json`)
-        if (expand)
-            steps.push(`${__dirname}/node_modules/@k15g/xslt-schxslt-saxonjs-2.3/expand.sef.json`)
-        if (compile)
-            steps.push(`${__dirname}/node_modules/@k15g/xslt-schxslt-saxonjs-2.3/compile-for-svrl.sef.json`)
-    }
+    var steps = getSteps('schxslt', include, expand, compile)
 
     // Loop through files
     Object.entries(files).forEach(([target, source]) => {
@@ -50,12 +40,11 @@ function perform(steps: string[], source: string, target: string, params: { [key
             options.sourceFileName = source
 
         var result: TransformResponse = SaxonJS.transform(options)
+        tmp = result.principalResult
 
-        if (i < steps.length - 1)
-            tmp = result.principalResult
-        else {
-            fs.mkdirSync(path.dirname(target), {recursive: true})    
-            fs.writeFileSync(target, result.principalResult)
+        if (i == steps.length - 1) {
+            fs.mkdirSync(path.dirname(target), { recursive: true })
+            fs.writeFileSync(target, tmp)
         }
     })
 }
